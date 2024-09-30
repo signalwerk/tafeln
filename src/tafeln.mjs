@@ -97,6 +97,13 @@ const svg = ({
     marks = generateGraphMarks([0, maxData]);
   }
 
+  // check if labels and all arrays within data have the same length
+  data.forEach((item) => {
+    if (item.length !== labels.length) {
+      throw new Error("Data and labels must have the same length");
+    }
+  });
+
   //  valueMarks ? valueMarks.sort() : generateGraphMarks([0, data]);
   const max = Math.max(maxData, ...marks);
 
@@ -111,12 +118,12 @@ const svg = ({
   // data-axis
   const texts = {
     tag: "g",
-    attr: {
-      style: {
-        textAnchor: "end",
-        // fontFamily: "monospace",
-      },
-    },
+    // attr: {
+    //   style: {
+    //     // textAnchor: "end",
+    //     // fontFamily: "monospace",
+    //   },
+    // },
     children: marks.map((item, index) => {
       let value = null;
 
@@ -146,6 +153,7 @@ const svg = ({
               chartsPadding.bottom -
               (marksHeight / max) * item +
               marksOffset.y,
+            ["text-anchor"]: "end",
           },
           children: [value],
         },
@@ -205,12 +213,12 @@ const svg = ({
 
       {
         tag: "g",
-        attr: {
-          style: {
-            textAnchor: "middle",
-            // fontFamily: "monospace",
-          },
-        },
+        // attr: {
+        //   style: {
+        //     // textAnchor: "middle",
+        //     // fontFamily: "monospace",
+        //   },
+        // },
         children: [
           ...labels.map((item, index) => {
             let label = null;
@@ -243,6 +251,7 @@ const svg = ({
                     chartsPadding.left +
                     (chartWidth / (labels.length - 1)) * index,
                   y: height - chartsPadding.bottom + 30,
+                  ["text-anchor"]: "middle",
 
                   // "text-anchor":
                   //   index === 0
@@ -265,7 +274,11 @@ const svg = ({
       box({
         width,
         height,
-        style: { fill: "rgb(200,200,200,0.2)", stroke: "black", strokeWidth: 1 },
+        style: {
+          fill: "rgb(200,200,200,0.2)",
+          stroke: "black",
+          strokeWidth: 1,
+        },
       }),
 
       box({
