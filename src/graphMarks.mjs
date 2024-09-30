@@ -2,10 +2,6 @@ export function generateGraphMarks(date) {
   const { min, max } = findMinMax(date);
   const stepSize = getStepSize(min, max);
 
-  console.log("min", min);
-  console.log("max", max);
-  console.log("stepSize", stepSize);
-
   return generateBySteps(min, max, getStepSize(min, max));
 }
 

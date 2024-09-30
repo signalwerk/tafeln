@@ -1,18 +1,13 @@
-// switch to 
+// switch to
 // npm install dateformat
 // https://www.npmjs.com/package/dateformat
 
+// minimal implementation like
+// https://github.com/taylorhakes/fecha
 
+import { pad } from "./number.mjs";
 
 const token = /d{1,2}|M{1,3}|YY(?:YY)?|S{1,3}|([HhMsDm])\1?'/g;
-
-const pad = (val, len = 2) => {
-  val = String(val);
-  while (val.length < len) {
-    val = "0" + val;
-  }
-  return val;
-};
 
 const monthNames = [
   "Jan",
@@ -29,7 +24,6 @@ const monthNames = [
   "Dec",
 ];
 
-// https://github.com/taylorhakes/fecha
 const formatFlags = {
   D: (dateObj) => String(dateObj.getDate()),
   DD: (dateObj) => pad(dateObj.getDate()),
@@ -37,7 +31,7 @@ const formatFlags = {
   dd: (dateObj) => pad(dateObj.getDay()),
   M: (dateObj) => String(dateObj.getMonth() + 1),
   MM: (dateObj) => pad(dateObj.getMonth() + 1),
-  MMM: (dateObj) => monthNames[dateObj.getMonth() ],
+  MMM: (dateObj) => monthNames[dateObj.getMonth()],
   YY: (dateObj) => pad(String(dateObj.getFullYear()), 4).substr(2),
   YYYY: (dateObj) => pad(dateObj.getFullYear(), 4),
   h: (dateObj) => String(dateObj.getHours() % 12 || 12),
