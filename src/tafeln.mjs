@@ -55,14 +55,17 @@ const chart = ({ width, height, max, data }) => {
   };
 };
 
-const box = ({ width, height, style }) => {
+const box = ({ width, height, x = 0, y = 0, style }) => {
   return {
     tag: "rect",
     attr: {
       width,
       height,
-      //   style,
-      style: { fill: "rgb(255,255,255)" },
+      x,
+      y,
+      style: {
+        ...style,
+      },
     },
   };
 };
@@ -78,6 +81,7 @@ const svg = ({
   chartsPadding,
   labels,
   labelFormatter,
+  debug,
 }) => {
   const maxData = Math.max(...data.map((item) => Math.max(...item)));
   let marks = null;
@@ -158,11 +162,6 @@ const svg = ({
       transform: `translate(${chartsPadding.left} ${chartsPadding.top})`,
     },
     children: [
-      box({
-        width: chartWidth,
-        height: chartHeight,
-        style: { fill: "rgba(200,0,0,0.2)" },
-      }),
       // render lines
       ...data.map((item) =>
         chart({
@@ -175,15 +174,13 @@ const svg = ({
     ],
   };
 
-  return {
+  const obj = {
     tag: "svg",
     attr: {
       viewBox: `0 0 ${width} ${height}`,
       xmlns: "http://www.w3.org/2000/svg",
     },
     children: [
-      box({ width, height, style: { fill: "rgb(200,200,200)" } }),
-
       charts,
       texts,
 
@@ -262,6 +259,26 @@ const svg = ({
       },
     ],
   };
+
+  if (debug) {
+    obj.children.push(
+      box({
+        width,
+        height,
+        style: { fill: "rgb(200,200,200,0.2)", stroke: "black", strokeWidth: 1 },
+      }),
+
+      box({
+        width: chartWidth,
+        height: chartHeight,
+        x: chartsPadding.left,
+        y: chartsPadding.top,
+        style: { fill: "rgba(200,0,0,0.2)" },
+      }),
+    );
+  }
+
+  return obj;
 };
 
 const Tafeln = (data) => {
@@ -280,6 +297,7 @@ const Tafeln = (data) => {
       top: 100,
       bottom: 50,
     },
+    debug: false,
   };
 
   return obj2html(svg({ ...defaults, ...data }), { pretty: true });
